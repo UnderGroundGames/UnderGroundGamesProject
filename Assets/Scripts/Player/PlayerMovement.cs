@@ -14,8 +14,12 @@ Diffrent controls for difrent players
 public class PlayerMovement : MonoBehaviour
 {
     //Left and right
-    public float moveSpeed = 50;
-    
+    [Range(0f, 10f)]
+    public float maxSpeed = 3;
+    public float speedUpTime = 0.5f;
+    private float CurrentSpeed = 0f;
+    private float currVel = 0f;
+
     //Jumpng
     [HideInInspector]
     public bool hasJump = true;
@@ -42,23 +46,35 @@ public class PlayerMovement : MonoBehaviour
         playerRB = gameObject.GetComponent<Rigidbody2D>();
     }
 
+    void Start(){
+        maxSpeed *= 50;
+    }
+
     void FixedUpdate()
     {
         if(!isDiving){ //Used to loose control durring dive
             //Moving side to side
-            playerRB.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * moveSpeed * Time.deltaTime, playerRB.velocity.y);
+            //Soften start and end
+            if(Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1){
+                CurrentSpeed = Mathf.SmoothDamp(CurrentSpeed, maxSpeed, ref currVel, speedUpTime);
+            } else {
+                CurrentSpeed = Mathf.SmoothDamp(CurrentSpeed, 0, ref currVel, speedUpTime);
+            }
+
+            //Move
+            playerRB.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * CurrentSpeed * Time.fixedDeltaTime, playerRB.velocity.y);
 
             //Jumping
             if(Input.GetAxisRaw("Jump") == 1 && hasJump){
-                playerRB.velocity += Vector2.up * jumpVel;
+                playerRB.velocity += (Vector2.up * (jumpVel * 50)) * Time.fixedDeltaTime;
                 hasJump = false; //Note: Reset in ResetJump script of child
             }
 
             //Make holding jump allow for longer jumps
             if(playerRB.velocity.y < 0){
-                playerRB.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+                playerRB.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
             } else if(playerRB.velocity.y > 0 && !Input.GetButton("Jump")){
-                playerRB.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+                playerRB.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
             }
         }
     }
