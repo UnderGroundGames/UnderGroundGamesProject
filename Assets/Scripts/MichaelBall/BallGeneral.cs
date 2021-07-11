@@ -15,6 +15,7 @@ public class BallGeneral : MonoBehaviour
 
     private void Reset(){
         transform.position = ballStartPos;
+	Bounce.bounceSpeed = 8f;
         gameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(0f, 0f, 0f);
         StartCoroutine(launchInSeconds(3));
     }

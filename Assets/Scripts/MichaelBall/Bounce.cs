@@ -5,7 +5,7 @@ using UnityEngine;
 public class Bounce : MonoBehaviour
 {
     private Rigidbody2D ballRB;
-    public float bounceSpeed = 5f;
+    public static float bounceSpeed = 5f;
     [Range(0f, 1f)]
     public float positionBias = .5f;
 
@@ -26,7 +26,7 @@ public class Bounce : MonoBehaviour
 
             ballRB.velocity = combinedLaunchAngle * bounceSpeed;
 
-            bounceSpeed += .5f; 
+            bounceSpeed += .05f; 
         } else {
             //Keep speed constant
             //StartCoroutine(setSpeedAfterBounce());
