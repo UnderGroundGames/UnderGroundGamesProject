@@ -6,9 +6,17 @@ public class LaunchBall : MonoBehaviour
 {
     private Rigidbody2D ballRB;
     public float launchSpeed = 500f;
-    void Start()
-    {
+    private bool launchLeft = true;
+
+
+    public void launch(){
         ballRB = gameObject.GetComponent<Rigidbody2D>();
-        ballRB.AddForce(Vector2.left * launchSpeed, ForceMode2D.Impulse);
+        if(launchLeft){
+            ballRB.AddForce(Vector2.left * launchSpeed, ForceMode2D.Impulse);
+            launchLeft = false;
+        } else {
+            ballRB.AddForce(Vector2.right * launchSpeed, ForceMode2D.Impulse);
+            launchLeft = true;
+        }
     }
 }

@@ -29,8 +29,14 @@ public class Bounce : MonoBehaviour
             bounceSpeed += .5f; 
         } else {
             //Keep speed constant
-            ballRB.velocity.Normalize();
-            ballRB.velocity = ballRB.velocity * bounceSpeed;
+            //StartCoroutine(setSpeedAfterBounce());
         }
+    }
+
+    private IEnumerator setSpeedAfterBounce(){
+        yield return new WaitForSeconds(0.05f);
+
+        ballRB.velocity.Normalize();
+        ballRB.velocity = ballRB.velocity * bounceSpeed;
     }
 }
