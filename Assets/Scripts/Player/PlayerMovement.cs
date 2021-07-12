@@ -40,10 +40,11 @@ public class PlayerMovement : MonoBehaviour
 
     //General
     private Rigidbody2D playerRB;
-
+    private Animator anim;
     void Awake()
     {
         playerRB = gameObject.GetComponent<Rigidbody2D>();
+        anim = gameObject.GetComponent<Animator>();
     }
 
     void Start(){
@@ -57,19 +58,39 @@ public class PlayerMovement : MonoBehaviour
             //Soften start and end
             if(Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1){
                 CurrentSpeed = Mathf.SmoothDamp(CurrentSpeed, maxSpeed, ref currVel, speedUpTime);
+                anim.SetBool("Run", true);
             } else {
                 CurrentSpeed = Mathf.SmoothDamp(CurrentSpeed, 0, ref currVel, speedUpTime);
+                anim.SetBool("Run", false);
             }
 
             //Move
             playerRB.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * CurrentSpeed * Time.fixedDeltaTime, playerRB.velocity.y);
-
+            if(playerRB.velocity.x < 0){
+                transform.localScale = new Vector3(-10, 10, 1);
+            }
+            else if(playerRB.velocity.x > 0) {
+                transform.localScale = new Vector3(10, 10, 1);
+            }
             //Jumping
             if(Input.GetAxisRaw("Jump") == 1 && hasJump){
+                anim.SetBool("Jump", true);
+                anim.SetBool("Run", false);
                 playerRB.velocity += (Vector2.up * (jumpVel * 50)) * Time.fixedDeltaTime;
                 hasJump = false; //Note: Reset in ResetJump script of child
             }
-
+            if (playerRB.velocity.y == 0) {
+                anim.SetBool("Jump", false);
+                anim.SetBool("Fall", false);
+            }
+            if (playerRB.velocity.y < -0.1) {
+                anim.SetBool("Jump", false);
+                anim.SetBool("Run", false);
+                anim.SetBool("Fall", true);
+            }
+            else {
+                anim.SetBool("Fall", false);
+            }
             //Make holding jump allow for longer jumps
             if(playerRB.velocity.y < 0){
                 playerRB.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
