@@ -26,7 +26,7 @@ public class Bounce : MonoBehaviour
 
             ballRB.velocity = combinedLaunchAngle * bounceSpeed;
 
-            bounceSpeed += .05f; 
+            bounceSpeed += .2f; 
         } else {
             //Keep speed constant
             //StartCoroutine(setSpeedAfterBounce());
