@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BallGeneral : MonoBehaviour
 {
@@ -43,6 +44,7 @@ public class BallGeneral : MonoBehaviour
 		P1Heart1.SetActive(false);
                 P1Heart2.SetActive(false);
                 P1Heart3.SetActive(false);
+                SceneManager.LoadScene("Win Scene");
         }
         if (HitGround.P2Lives == 3) {
 		P2Heart1.SetActive(true);
@@ -63,6 +65,7 @@ public class BallGeneral : MonoBehaviour
 		P2Heart1.SetActive(false);
                 P2Heart2.SetActive(false);
                 P2Heart3.SetActive(false);
+                SceneManager.LoadScene("Win Scene");
         }
     }
     private void Reset(){
